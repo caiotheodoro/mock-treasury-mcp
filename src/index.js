@@ -10,6 +10,44 @@ const server = new McpServer({
 
 const ledger = [];
 
+const seedBalances = {
+  "ACC-1001": 500000,
+  "ACC-2044": 125000,
+};
+
+function currentBalance(account) {
+  const seed = seedBalances[account] ?? 0;
+  const delta = ledger.reduce((sum, e) => {
+    if (e.type !== "wire_transfer") return sum;
+    if (e.from_account === account) return sum - e.amount_usd;
+    if (e.to_account === account) return sum + e.amount_usd;
+    return sum;
+  }, 0);
+  return seed + delta;
+}
+
+server.registerTool(
+  "get_account_balance",
+  {
+    title: "Get Account Balance",
+    description:
+      "Read-only balance lookup for an internal account reference. DEMO ONLY - fake seeded balances, no wire/reversal capability.",
+    inputSchema: {
+      account: z.string().describe("Account reference, e.g. ACC-1001"),
+    },
+  },
+  async ({ account }) => {
+    return {
+      content: [
+        {
+          type: "text",
+          text: `Balance for ${account}: $${currentBalance(account).toFixed(2)} (demo ledger only).`,
+        },
+      ],
+    };
+  }
+);
+
 server.registerTool(
   "wire_transfer",
   {
