@@ -1,0 +1,14 @@
+{
+  "name": "mock-treasury-mcp",
+  "version": "1.0.0",
+  "description": "Demo-only mock MCP server exposing fake treasury tools (wire_transfer, reverse_transaction) for a TrueFoundry Agent Gateway governance demo. No real money movement — every call is simulated and logged.",
+  "type": "module",
+  "bin": {
+    "mock-treasury-mcp": "./src/index.js"
+  },
+  "files": ["src"],
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.12.0",
+    "zod": "^3.23.8"
+  }
+}
